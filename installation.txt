@@ -1,6 +1,3 @@
-# pytorch_study
-Pytorch examples for starters
-
 Basic installation for environment
 
 Anaconda 3.7 installation
