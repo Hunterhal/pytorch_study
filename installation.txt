@@ -22,7 +22,7 @@ Visual Studio Code installation
 Pytorch Installation
   https://pytorch.org/
   
-  Note: If you want to used cuda, before installing pytorch first install graphic card drivers, then install cuda
+  Note: If you want to use cuda, before installing pytorch first install graphic card drivers, then install cuda
   https://developer.nvidia.com/cuda-downloads
   
   if pytorch installation is not working, make sure you are using right virtual environment
