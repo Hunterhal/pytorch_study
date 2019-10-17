@@ -1,0 +1,10 @@
+Start with this https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html tutorial.
+
+Run this tutorial locally https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html#sphx-glr-beginner-blitz-cifar10-tutorial-py
+  Change the dataset to MNIST
+  Change neural network architecture and present the results
+  Calculate neural network weights
+  
+Read the reading list :)
+
+
