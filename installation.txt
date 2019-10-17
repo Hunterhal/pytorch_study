@@ -12,7 +12,7 @@ Anaconda 3.7 installation
 Visual Studio Code installation
   https://code.visualstudio.com/
   
-  visual studio code is used as an ide, any other ide can be used but vs code is preferred
+  visual studio code is used as the ide, any other ide can be used but vs code is preferred
   
   after installation, to change terminal from powershell to cmd, first press ctrl + shift + k then 
   click "Terminal: Select Default Shell", lastly click "Command Prompt"
