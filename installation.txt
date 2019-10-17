@@ -33,3 +33,6 @@ Pytorch Installation
   This project is written on 1.2.0, check your pytorch version for compatibility issues
   
   After printing version run "pint(torch.cuda.is_available())" if this returns True then your cuda drivers are running correctly and you are good to go, otherwise search online or do the steps all over again
+
+Visual Code Extensions
+  Install Python (from Microsoft) and Pytroch Snippets extensions to the VS Code
