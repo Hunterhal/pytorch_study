@@ -29,10 +29,10 @@ Pytorch Installation
   
   After pytorch installation, run python on cmd or terminal
   
-  In the python interactive shell, first run "import torch", then "pint(torch.__version__)"this should give 1.2.0 or 1.3.0
+  In the python interactive shell, first run "import torch", then "print(torch.__version__)"this should give 1.2.0 or 1.3.0
   This project is written on 1.2.0, check your pytorch version for compatibility issues
   
-  After printing version run "pint(torch.cuda.is_available())" if this returns True then your cuda drivers are running correctly and you are good to go, otherwise search online or do the steps all over again
+  After printing version run "print(torch.cuda.is_available())" if this returns True then your cuda drivers are running correctly and you are good to go, otherwise search online or do the steps all over again
 
 Visual Code Extensions
   Install Python (from Microsoft) and Pytroch Snippets extensions to the VS Code
