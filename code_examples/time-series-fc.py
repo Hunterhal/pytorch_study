@@ -1,14 +1,12 @@
 # Generate sine wave, train it with a fully connected network (2 hidden layer)
 # author: Mehmet Fatih Gülakar 14/11/2019
 
-from models import FCNet
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torchvision
 import torch.nn as nn
 from torch.autograd import Variable
-
 
 import imageio
 
