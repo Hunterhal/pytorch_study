@@ -11,22 +11,27 @@ from torch.autograd import Variable
 import imageio
 
 fsampling = 250
+num_epoch = 5000
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
 x = torch.unsqueeze(torch.linspace(0, 2*np.pi, fsampling), dim=1)  # x data (tensor), shape=(fsampling, 1)
 y = torch.sin(x)                                                   # y data (tensor), shape=(fsampling, 1)
 
 # torch can only train on Variable, so convert them to Variable
 x, y = Variable(x), Variable(y)
 
+# Send x and y to device(can be GPU)
+x = x.to(device)
+y = y.to(device)
+
 # view data
 plt.figure(figsize=(10,4))
-plt.scatter(x.data.numpy(), y.data.numpy(), color = "green")
+plt.scatter(x.cpu().data.numpy(), y.cpu().data.numpy(), color = "green")
 plt.title('Regression Analysis')
 plt.xlabel('Independent var.')
 plt.ylabel('Dependent var.')
 plt.grid()
 plt.show()
-
-num_epoch = 12000
 
 class FCNet(torch.nn.Module):
     def __init__(self, n_feature, n_hidden, n_output):
@@ -39,7 +44,7 @@ class FCNet(torch.nn.Module):
         x = self.outlayer(x)
         return x
 
-net  = FCNet(n_feature=1, n_hidden=(15,25), n_output=1)
+net  = FCNet(n_feature=1, n_hidden=(15,25), n_output=1).to(device)
 print(net)
 opitimizer = torch.optim.SGD(net.parameters(), lr = 0.1) # Tried both Adam and SGD, Adam trains faster but loss starts to oscillate, while SGD does not change much.
 criterion = nn.MSELoss()
@@ -66,10 +71,10 @@ for epoch in range(num_epoch):
         ax.set_ylabel('Dependent variable')
         ax.set_xlim(0, 2*np.pi)
         ax.set_ylim(-1.05, 1.05)
-        ax.scatter(x.data.numpy(), y.data.numpy(), color="orange")
-        ax.plot(x.data.numpy(), prediction.data.numpy(), 'g-', lw=3)
+        ax.scatter(x.cpu().data.numpy(), y.cpu().data.numpy(), color="orange")
+        ax.plot(x.cpu().data.numpy(), prediction.cpu().data.numpy(), 'g-', lw=3)
         ax.text(1.0, 0.1, "Step = %d"%(epoch+1), fontdict={'size':24, 'color': 'red'})
-        ax.text(1.0, 0, "Loss = %.4f"%loss.data.numpy(), fontdict={'size':24, 'color': 'red'})
+        ax.text(1.0, 0, "Loss = %.4f"%loss.cpu().data.numpy(), fontdict={'size':24, 'color': 'red'})
 
         fig.canvas.draw()
         frame = np.frombuffer(fig.canvas.tostring_rgb(), dtype='uint8')
