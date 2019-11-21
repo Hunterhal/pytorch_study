@@ -23,3 +23,4 @@ Generate sinewave signal and train neural network to predict sinewave or any oth
   Use only linear neural networks (Fully Connected or Dense) 
   Use recurrent neural netwokrs (RNN, LSTM, GRU)
 
+Search for timeries dataset, anomaly detection using deep learning.
