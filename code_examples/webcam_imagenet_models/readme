@@ -1,3 +1,6 @@
 Pretrained imagenet models inference for webcam live feed.
 
-Issue change codes for GPU support.
+To - Do List: 
+
+1) Change codes for GPU support.
+2) Insert loop elapsed time
