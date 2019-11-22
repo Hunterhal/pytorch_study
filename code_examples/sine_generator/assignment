@@ -1,0 +1,30 @@
+Generating Sine Wave Using Regressional Neural Network
+
+1.	Generate a simple sine wave without noise
+2.	Train neural network to learn sine wave 
+3.	Get accuracy results without noise
+4.	Investigate the effect of input noise to accuracy
+5.  Train with noisy data
+
+The neural network types to be used
+o	FCN with two layers   (change neuron size and report)
+o	FCN with three layers (change neuron size and report)
+o	1D CNN
+o	RNN
+o	GRU
+o	LSTM	
+
+Note: Put only training accuracy
+
+Create a flow chart for all the codes
+Create report for the results
+Explain where did you stuck and how did you overcome
+Write how all the nueral networks work
+Write simple and neat code with comments in every line
+Do Not Use complete code from the internet, you should write your code
+Animation for training can be added afterwards
+
+Berk: FCN two layers 10 neuron, 1D CNN
+Eda: FCN two layers 50 neuron, RNN
+Mehmet: FCN three layers 10 neuron, GRU
+Fatih: FCN three layers 50 neuron, LSTM
