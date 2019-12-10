@@ -1,0 +1,28 @@
+SHORT LIST ABOUT TIME SERIES DATA SETS
+
+In this website, you can find some time-series data sets and info about them.
+1) https://machinelearningmastery.com/time-series-datasets-for-machine-learning/
+
+a) Shampoo Sales Dataset:
+   This dataset describes the monthly number of sales of shampoo over a 3 year period.
+b) Minimum Daily Temperatures Dataset:
+   This dataset describes the minimum daily temperatures over 10 years (1981-1990) 
+   in the city Melbourne, Australia.
+c) Monthly Sunspot Dataset:
+   This dataset describes a monthly count of the number 
+   of observed sunspots for just over 230 years (1749-1983).
+d) Daily Female Births Dataset:
+   This dataset describes the number of daily female births in California in 1959.
+   
+  
+Another birilliant website which contains various time series data sets, check it out:
+2) https://timeseries.weebly.com/data-sets.html
+
+One more website where you can find data sets, also ask your questions. Link is down below again.
+3) https://opendata.stackexchange.com/
+
+Last but not least, there is a time series open-source data library. You can download the package for free
+from its website. Link is down below.
+4) https://pkg.yangzhuoranyang.com/tsdl/
+
+Much thanks to these websites for all the data sets which they are provided to public usage.
