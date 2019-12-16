@@ -14,25 +14,19 @@ total_samples = sampling_freq * signal_duration
 #Learning variables
 device = torch.device('cpu')
 max_epoch = 1000
-test_number = 25
+test_number = 10
 learning_rate = 1e-3
 batch_size = 16
 seq_length = 5
 
-num_layers = 5
-size_hidden = 10
+# LSTM parameters 
+num_layers = 3
+size_hidden = 15
 size_in = 1
 size_out = size_in
 
-
 x = torch.linspace(0, signal_duration * 2 * np.pi, total_samples).to(device)
-x = x.view(seq_length, batch_size, -1)
 y_gt = torch.sin(x)
-
-print("xsize:", x.size(), "ysize:", y_gt.size())
-
-#plt.plot(x.detach(), y_gt.detach())
-#plt.show()
 
 model = models.LSTM(size_in=size_in, num_layers=num_layers, size_hidden=size_hidden, size_out=size_out, size_batch=batch_size)
 print(model)
@@ -40,6 +34,7 @@ print(model)
 loss_function = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), learning_rate)
 
+# Initialize hidden and cell states
 h_state = torch.zeros(num_layers, batch_size, size_hidden).to(device)
 c_state = torch.zeros(num_layers, batch_size, size_hidden).to(device)
 
@@ -47,15 +42,13 @@ for epoch in range(max_epoch):
     #Train Loop
     for epoch_index in range(total_samples):
 
-        input_batch = torch.zeros(seq_length, batch_size, 1).to(device)
-        ground_truth_batch = torch.zeros(seq_length, batch_size, 1).to(device)
+        input_batch = torch.zeros(seq_length, batch_size, 1).to(device)                                 # Tensor for storing random samples of x
+        ground_truth_batch = torch.zeros(seq_length, batch_size, 1).to(device)                          # Tensor for storing the samples of y_gt, which has the same indexes with x.
 
         for batch_index in range(batch_size):
-            rand_index_batch = random.randint(0, batch_size- 1)   # generate random index for batch
-            rand_index_in = random.randint(0, int(total_samples/(batch_size*seq_length)-1)) # generate random index for input_size
-
-            input_batch[:, batch_index, 0] = x[:, rand_index_batch, rand_index_in]
-            ground_truth_batch[:, batch_index, 0] = y_gt[:, rand_index_batch, rand_index_in]
+           rand_index = random.randint(0, total_samples-1-seq_length)                                   # Generate a random index through x.
+           input_batch[:, batch_index, 0] = x[rand_index:rand_index+seq_length]                         # Copy a portion of it that has size of seq_length, to the input_batch.
+           ground_truth_batch[:, batch_index, 0] = y_gt[rand_index : rand_index+seq_length]             # Do the same thing for y.
 
         out, (h_state, c_state)  = model(input_batch, (h_state, c_state))
         h_state.detach_()
@@ -71,21 +64,34 @@ for epoch in range(max_epoch):
 
         print("TRAIN - Epoch: ", str(epoch), " Iteration: ", str(epoch_index), " Loss: ", str(loss.data))
 
-    #Test loop
-    # if epoch % test_number == 0:
-    #     out_buffer = torch.zeros(1, total_samples)
-    #     for iteration_index in range(total_samples):
-    #         out, (h_state, c_state)= model(x[iteration_index].unsqueeze(0), (h_state, c_state))
+    # Test loop
 
-    #         out_buffer[0, iteration_index] = out
+    if epoch % test_number == 0:
 
-    #         loss = loss_function(y_gt[iteration_index], out)
+        # Reset the hidden and cell states first.
+        h_state = torch.zeros(num_layers, batch_size, size_hidden).to(device)
+        c_state = torch.zeros(num_layers, batch_size, size_hidden).to(device)
 
-    #         print("TEST - Epoch: ", str(epoch), " Iteration: ", str(iteration_index), " Loss: ", str(loss.data))
+        out_buffer = torch.zeros(total_samples)
 
-    #     plt.plot(x.cpu().detach(), y_gt.cpu().detach())
-    #     plt.plot(x.cpu().detach(), out_buffer[0, :].cpu().detach())
-    #     plt.show()
+        # In the loop a number of sections of x/y are tested. It is total of (seq_length * batch_size)
+        for iteration_index in range(int(total_samples/(seq_length*batch_size))):
+
+            # Take the portion of x (which depends on iteration_index), reshape it so that it can be fed to the LSTM network.
+            out, (h_state, c_state) = model(x[iteration_index*seq_length*batch_size : (iteration_index+1)*seq_length*batch_size].view(seq_length, batch_size, -1), (h_state, c_state))
+
+            # Shape of output is [seq_length, batch_size, input_size], we need to use it for testing. So reshape it to (seq_length*batch_size*input_size, 1) tensor
+            # Then reduce it to the (seq_length*batch_size*input_size) tensor by [:, 0]
+            out = out.view(-1, 1)[:, 0],
+
+            out_buffer[iteration_index*seq_length*batch_size : (iteration_index+1)*seq_length*batch_size] = out                     # Same thing done on tensor x above. 
+            loss = loss_function(y_gt[iteration_index*seq_length*batch_size : (iteration_index+1)*seq_length*batch_size], out)      # Calculate loss between the section of y_gt and output of LSTM.
+
+            print("TEST - Epoch: ", str(epoch), " Iteration: ", str(iteration_index), " Loss: ", str(loss.data))
+
+        plt.plot(x.view(total_samples).cpu().detach(), y_gt.view(total_samples).cpu().detach())
+        plt.plot(x.view(total_samples).cpu().detach(), out_buffer.cpu().detach())
+        plt.show()
 
 
 
