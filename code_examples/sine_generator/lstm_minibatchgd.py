@@ -82,7 +82,7 @@ for epoch in range(max_epoch):
 
             # Shape of output is [seq_length, batch_size, input_size], we need to use it for testing. So reshape it to (seq_length*batch_size*input_size, 1) tensor
             # Then reduce it to the (seq_length*batch_size*input_size) tensor by [:, 0]
-            out = out.view(-1, 1)[:, 0],
+            out = out.view(-1, 1)[:, 0]
 
             out_buffer[iteration_index*seq_length*batch_size : (iteration_index+1)*seq_length*batch_size] = out                     # Same thing done on tensor x above. 
             loss = loss_function(y_gt[iteration_index*seq_length*batch_size : (iteration_index+1)*seq_length*batch_size], out)      # Calculate loss between the section of y_gt and output of LSTM.
