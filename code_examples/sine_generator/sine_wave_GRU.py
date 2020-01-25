@@ -5,6 +5,8 @@ import torch.optim as optim
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import random
+from timeit import default_timer as timer
+import time
 
 
 # signal variables
@@ -25,7 +27,7 @@ hidden_size = 3
 input_size = 1
 size_out = input_size
 
-x=torch.linspace(0, signal_duration * 2 * np.pi, total_samples)  # dividing signal_duration * 2 * np.pi interval into (total_samples) pieces with same length, x data
+x = torch.linspace(0, signal_duration * 2 * np.pi, total_samples)  # dividing signal_duration * 2 * np.pi interval into (total_samples) pieces with same length, x data
 y_gt = torch.sin(x)  # create sine wave for x points, y data
 
 print(x.size(),y_gt.size())  # print sizes of x and y_gt tensors
@@ -54,6 +56,7 @@ optimizer = optim.Adam(model.parameters(), learning_rate)  # Adam optimizer
 
 # initialize hidden state
 h_state = torch.zeros(num_layers, batch_size, hidden_size)
+start = timer()  # start timer
 
 for epoch in range(max_epoch):
 
@@ -98,3 +101,7 @@ for epoch in range(max_epoch):
         plt.plot(x.view(total_samples).cpu().detach(), y_gt.view(total_samples).detach())
         plt.plot(x.view(total_samples).cpu().detach(), out_buffer.detach())
         plt.show()
+        end = timer()  # end timer
+        elapsed_time = format((end - start)/60, '.3f')  # calculate elapsed time
+        print('Elapsed time: ', elapsed_time, ' mins')
+        time.sleep(2)
