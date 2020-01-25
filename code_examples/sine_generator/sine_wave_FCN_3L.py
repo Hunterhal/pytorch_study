@@ -5,6 +5,8 @@ import numpy as np
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import random
+from timeit import default_timer as timer
+import time
 
 
 # signal variables
@@ -45,6 +47,7 @@ print(model)  # print information about FCN_3L (our model)
 
 loss_function = nn.MSELoss()  # loss function for regression mean squared loss
 optimizer = optim.Adam(model.parameters(), learning_rate)  # Adam optimizer
+start = timer()  # start timer
 
 for epoch in range(max_epoch):
 
@@ -95,3 +98,7 @@ for epoch in range(max_epoch):
         plt.plot(x.detach(), y_gt.detach())
         plt.plot(x.detach(), out_buffer[0, :].detach())
         plt.show()
+        end = timer()  # end timer
+        elapsed_time = format((end - start)/60, '.3f')  # calculate elapsed time
+        print('Elapsed time: ', elapsed_time, ' mins')
+        time.sleep(2)
