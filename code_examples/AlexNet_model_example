@@ -26,3 +26,4 @@ class Net(nn.Module):
         nn.ReLU()
 net = Net()
 print(net)
+#This code created by using ImageNet Classification With Deep Convolutional Neural Networks(Alex Krizhevsky, Ilya Sutskever, and Geoffrey E. Hinton. 2017)
