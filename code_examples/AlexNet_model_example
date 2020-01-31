@@ -15,19 +15,19 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.net = nn.Sequential(
-            nn.Conv2d(3, 96, kernel_size = 11, stride = 4),
+            nn.Conv2d(3, 96, kernel_size = 11, stride = 4, padding=2),
             nn.ReLU(),
             nn.MaxPool2d(3, 2), 
             nn.LocalResponseNorm(size = 5, alpha = 1e-4, beta = 0.75, k = 2),
-            nn.Conv2d(96, 256, kernel_size = 5, stride = 4),
+            nn.Conv2d(96, 256, kernel_size = 5, stride = 4, padding=2),
             nn.ReLU(),
             nn.LocalResponseNorm(size = 5, alpha = 1e-4, beta = 0.75, k = 2),
             nn.MaxPool2d(3, 2)  ,    
-            nn.Conv2d(256, 384, kernel_size = 3, stride = 4),
+            nn.Conv2d(256, 384, kernel_size = 3, stride = 4, padding=1),
             nn.ReLU(),
-            nn.Conv2d(384, 384, kernel_size = 3, stride = 4),
+            nn.Conv2d(384, 384, kernel_size = 3, stride = 4, padding=1),
             nn.ReLU(),
-            nn.Conv2d(384, 256, kernel_size = 3, stride = 4),
+            nn.Conv2d(384, 256, kernel_size = 3, stride = 4, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(3,2),
         )
@@ -39,16 +39,16 @@ class Net(nn.Module):
             nn.Linear(4096, 1000), #outpouts are 1000 classes.
             nn.ReLU(),
             )
-        def forward(self, x):
-            x = self.net(x),
-            x = torch.flatten(x, 1),
-            x = self.classer(x),
-            return x
+    def forward(self, x):
+        x = self.net(x),
+        x = torch.flatten(x, 1),
+        x = self.classer(x),
+        return x
 net = Net()
 alexnet = net.to(device)
 print(net)
 
-data = torch.rand( 3,  227 ,227)
+data = torch.rand(1, 3,  227 ,227)
 print(data)
 
 optimizer = torch.optim.Adam(net.parameters(), lr=1e-3)
