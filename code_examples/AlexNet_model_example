@@ -1,8 +1,15 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import math
 
 
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+epoch_number = 30
+
+criterion = nn.CrossEntropyLoss().cuda
 class Net(nn.Module):
 
     def __init__(self):
@@ -38,5 +45,23 @@ class Net(nn.Module):
             x = self.classer(x),
             return x
 net = Net()
+alexnet = net.to(device)
 print(net)
+
+data = torch.rand( 3,  227 ,227)
+print(data)
+
+optimizer = torch.optim.Adam(net.parameters(), lr=1e-3)
+
+for epoch in range(epoch_number):
+    data = data.to(device)
+
+    outpout = alexnet(data)
+    loss = criterion(outpout,data)
+    print(loss)
+    print(epoch)
+
+    optimizer.zero_grad()
+    loss.bacward()
+    optimizer.step()
 #This code created by using ImageNet Classification With Deep Convolutional Neural Networks(Alex Krizhevsky, Ilya Sutskever, and Geoffrey E. Hinton. 2012)
