@@ -55,13 +55,13 @@ for epoch in range(max_epoch):
     for batch in trainloader:
         dataiter += 1
         spec = batch[0][0].squeeze(0).squeeze(0).to(device)
-        label = batch[1]
+        label = batch[1].to(device)
 
-        h1 = torch.zeros(batch_size, L1, requires_grad=True)
-        h2 = torch.zeros(batch_size, L2, requires_grad=True)
+        h1 = torch.zeros(batch_size, L1, requires_grad=True, device=device)
+        h2 = torch.zeros(batch_size, L2, requires_grad=True, device=device)
 
-        c1 = torch.zeros(batch_size, L1, requires_grad=True)
-        c2 = torch.zeros(batch_size, L2, requires_grad=True)
+        c1 = torch.zeros(batch_size, L1, requires_grad=True, device=device)
+        c2 = torch.zeros(batch_size, L2, requires_grad=True, device=device)
 
         
         for i in range(spec.size()[1]):
