@@ -15,21 +15,21 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.net = nn.Sequential(
-            nn.Conv2d(3, 96, kernel_size = 11, stride = 4, padding=2),
+            nn.Conv2d(3, 96, kernel_size = 11, stride = 4),
             nn.ReLU(),
-            nn.MaxPool2d(3, 2), 
+            nn.MaxPool2d(2), 
             nn.LocalResponseNorm(size = 5, alpha = 1e-4, beta = 0.75, k = 2),
-            nn.Conv2d(96, 256, kernel_size = 5, stride = 4, padding=2),
+            nn.Conv2d(96, 256, kernel_size = 5, stride = 1, padding=2),
             nn.ReLU(),
             nn.LocalResponseNorm(size = 5, alpha = 1e-4, beta = 0.75, k = 2),
-            nn.MaxPool2d(3, 2)  ,    
-            nn.Conv2d(256, 384, kernel_size = 3, stride = 4, padding=1),
+            nn.MaxPool2d(2)  ,    
+            nn.Conv2d(256, 384, kernel_size = 3, stride = 1, padding=1),
             nn.ReLU(),
-            nn.Conv2d(384, 384, kernel_size = 3, stride = 4, padding=1),
+            nn.Conv2d(384, 384, kernel_size = 3, stride = 1, padding=1),
             nn.ReLU(),
-            nn.Conv2d(384, 256, kernel_size = 3, stride = 4, padding=1),
+            nn.Conv2d(384, 256, kernel_size = 3, stride = 1, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(3,2),
+            nn.MaxPool2d(2),
         )
         self.classer = nn.Sequential(
             nn.Linear(256 * 6 * 6, 4096),
@@ -40,9 +40,10 @@ class Net(nn.Module):
             nn.ReLU(),
             )
     def forward(self, x):
-        x = self.net(x),
-        x = torch.flatten(x, 1),
-        x = self.classer(x),
+        x = self.net(x)
+        print(x.size())
+        x = torch.flatten(x, 1)
+        x = self.classer(x)
         return x
 net = Net()
 alexnet = net.to(device)
@@ -64,4 +65,3 @@ for epoch in range(epoch_number):
     optimizer.zero_grad()
     loss.bacward()
     optimizer.step()
-#This code created by using ImageNet Classification With Deep Convolutional Neural Networks(Alex Krizhevsky, Ilya Sutskever, and Geoffrey E. Hinton. 2012)
