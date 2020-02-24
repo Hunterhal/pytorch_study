@@ -13,7 +13,7 @@ from torch.utils.data import Dataset, DataLoader
 import librosa
 
 # Dataset class and neural network class
-from fsdd_dataset import MyCustomFSDD
+from fsdd_dataset_LR import MyCustomFSDD
 import models
 
 
