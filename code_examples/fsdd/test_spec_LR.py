@@ -1,4 +1,4 @@
-from learn_spec import *
+from learn_spec_LR import *
 
 net.load_state_dict(torch.load(netname))
 
