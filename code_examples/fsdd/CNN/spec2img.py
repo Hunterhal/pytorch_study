@@ -9,13 +9,14 @@ import skimage
 import torch.nn as nn
 
 
-data_path = glob.glob("/home/mehmet/Desktop/bitirme/codes/fsdd/recordings/wav_files/*.wav") 
-save_path = "/home/mehmet/Desktop/bitirme/codes/fsdd/recordings/a" 
+data_path = glob.glob("/home/mehmet/Desktop/bitirme/codes/fsdd/recordings/test-dataset/*.wav") 
+save_path = "/home/mehmet/Desktop/bitirme/codes/fsdd/recordings/norm-test-image-dataset" 
 
 n_fft = 256
 fbins = n_fft//2 + 1
-spec_transform = nn.Sequential(transforms.Resample(orig_freq = 44100, new_freq = 8000),transforms.Spectrogram(n_fft = n_fft, normalized = True))
-#spec_transform = transforms.Spectrogram(n_fft = n_fft, normalized = True)
+# If your .wav file is not 8000 Hz you should convert it first with below code line
+#spec_transform = nn.Sequential(transforms.Resample(orig_freq = 44100, new_freq = 8000),transforms.Spectrogram(n_fft = n_fft, normalized = True))
+spec_transform = transforms.Spectrogram(n_fft = n_fft, normalized = True)
 for i in range(len(data_path)): 
     fn = data_path[i]
     digit = int(fn.split("/")[-1].split("_")[0])   # /0_jackson_0.wav
