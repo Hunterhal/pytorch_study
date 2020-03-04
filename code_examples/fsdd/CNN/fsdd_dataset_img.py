@@ -8,9 +8,9 @@ import cv2
 class MyCustomFSDD(Dataset):
     def __init__(self, data_path, train = True):
         if(train == True):
-            self.data_path = glob.glob(data_path + "/yeni-train-image-dataset/*.png")
+            self.data_path = glob.glob(data_path + "/norm-train-image-dataset/*.png")
         else:
-            self.data_path = glob.glob(data_path + "/yeni-test-image-dataset/*.png")
+            self.data_path = glob.glob(data_path + "/norm-test-image-dataset/*.png")
 
     def __getitem__(self, index):
 
