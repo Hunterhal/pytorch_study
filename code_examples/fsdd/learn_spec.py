@@ -21,10 +21,10 @@ from fsdd_dataset import MyCustomFSDD, my_collate
 import models
 
 # Learning parameters
-batch_size = 32
+batch_size = 64
 learning_rate = 1e-3
-L1, L2, L3 = (500, 200, 80)
-max_epoch = 100
+L1, L2, L3, L4 = (500, 200, 80, 25)
+max_epoch = 150
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # Dataset variables
@@ -60,7 +60,7 @@ testdataset = MyCustomFSDD(data_path = data_path, train = False, transform = tra
 testloader = DataLoader(testdataset, batch_size = 1, shuffle = True, pin_memory = True, num_workers = 0)
 
 # Initialize the NN model
-net = models.SpectrogramLearner(fbins = fbins, output_dim = 10, hidden_dims = (L1, L2, L3))
+net = models.SpectrogramLearner(fbins = fbins, output_dim = 10, hidden_dims = (L1, L2, L3, L4), device=device)
 net = net.to(device)
 
 # Optimizer and Loss function
@@ -78,48 +78,20 @@ if __name__ == "__main__":
             spec = batch[0][0].squeeze(0).squeeze(0).to(device)
             label = batch[1].to(device)
             seq_length = batch[3].to(device)
-            #plt.imshow(spec[0].squeeze(0).cpu())
-            #plt.show()
-            max_length = torch.max(seq_length)
 
-            indexes = list(range(0, batch_size))
-
-            h1 = torch.zeros(batch_size, L1, requires_grad=True, device=device)
-            h2 = torch.zeros(batch_size, L2, requires_grad=True, device=device)
-
-            c1 = torch.zeros(batch_size, L1, requires_grad=True, device=device)
-            c2 = torch.zeros(batch_size, L2, requires_grad=True, device=device)
+  
+            y_pred = net(spec[:, 0, :, :])
             
-            for i in range(max_length):
+            optimizer.zero_grad()
+            loss = criterion(y_pred, label)
 
-                state = [h1, c1 ,h2, c2]
-                y_pred, last_state = net(spec[:, 0, :, i], state)
-
-                h1 = torch.tensor(last_state[0]) 
-                h2 = torch.tensor(last_state[2])
-                c1 = torch.tensor(last_state[1])
-                c2 = torch.tensor(last_state[3])
-
-                indexes_buffer = copy.deepcopy(indexes)
-                for j in indexes_buffer:
-                    if i == seq_length[j]:
-                        indexes.remove(j)
-
-                if len(indexes) < 5:
-                    break
-
-                optimizer.zero_grad()
-                
-                loss = criterion(y_pred[indexes], label[indexes])
-
-                loss.backward()
-                optimizer.step()
+            loss.backward()
+            optimizer.step()
             
-            print("TRAIN","Epoch:",epoch+1, "Data-Num:",batchiter, "Time-Segment:", i, "Loss:",loss.item(), " index: ", indexes)
+            print("TRAIN","Epoch:",epoch+1, "Data-Num:",batchiter, "Loss:",loss.item())
+        if (epoch % 10 == 0):
+            torch.save(net.state_dict(), "./saved_models/" + netname + "_epoch_%d"%(epoch) + ".pth")
 
-        if epoch % 5 == 0:
-            #torch.save(net.state_dict(), "./saved_models/" + netname + "_epoch_%d"%(epoch) + ".pth")
-            pass
         
         if run == False:
             print("SIGINT asserted exiting training loop")

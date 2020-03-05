@@ -1,6 +1,5 @@
 from learn_spec import *
 
-
 directory = "./saved_models"
 files = list(filter(os.path.isfile, glob.glob(directory + "/*.pth")))
 files.sort(key=lambda x: os.path.getmtime(x))
@@ -16,14 +15,8 @@ for filename in files:
             spec = data[0][0].squeeze(0).squeeze(0).to(device)
             label = data[1].to(device)
             seq_length = data[3].to(device)
-            h1 = torch.zeros(1, L1, requires_grad=True, device=device)
-            h2 = torch.zeros(1, L2, requires_grad=True, device=device)
 
-            c1 = torch.zeros(1, L1, requires_grad=True, device=device)
-            c2 = torch.zeros(1, L2, requires_grad=True, device=device)
-            for i in range(seq_length):
-                state = [h1, c1 ,h2, c2]
-                output, last_state = net(spec[:, i].unsqueeze(0), state)
+            output = net(spec.unsqueeze(0))
 
             _, predicted = torch.max(output.data, 1)
             total += label.size(0)
