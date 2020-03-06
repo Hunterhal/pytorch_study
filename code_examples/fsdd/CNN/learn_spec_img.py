@@ -24,7 +24,7 @@ import cv2
 batch_size = 32
 learning_rate = 1e-3
 max_epoch = 1000
-device = torch.device('cuda')
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # Dataset variables
 data_path = "/home/mehmet/Desktop/bitirme/codes/fsdd/recordings"
