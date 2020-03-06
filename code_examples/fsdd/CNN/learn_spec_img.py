@@ -24,7 +24,7 @@ import cv2
 batch_size = 32
 learning_rate = 1e-3
 max_epoch = 1000
-device = torch.device('cpu')
+device = torch.device('cuda')
 
 # Dataset variables
 data_path = "/home/mehmet/Desktop/bitirme/codes/fsdd/recordings"
@@ -64,8 +64,8 @@ if __name__ == "__main__":
         for batch in trainloader:
         
             batchiter += 1
-            spec = batch[0].to(device)
-            spec = np.transpose(spec, (0, 3, 1, 2))
+            spec = np.transpose(batch[0], (0, 3, 1, 2)) 
+            spec = spec.to(device)
             label = batch[1].to(device)
             indexes = list(range(0, batch_size)) 
             y_pred = net(spec[:, 0, :, :].unsqueeze(1))   
