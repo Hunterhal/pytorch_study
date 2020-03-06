@@ -1,6 +1,8 @@
 from learn_spec_img import *
 import matplotlib.pyplot as plt
 
+
+device = torch.device('cuda')
 directory = "./saved_models"
 files = list(filter(os.path.isfile, glob.glob(directory + "/*.pth")))
 files.sort(key=lambda x: os.path.getmtime(x))
@@ -13,8 +15,8 @@ for filename in files:
     print(filename)
     with torch.no_grad():
         for data in testloader:
-            spec = data[0].to(device)
-            spec = np.transpose(spec, (0, 3, 1, 2))
+            spec = np.transpose(data[0], (0, 3, 1, 2))
+            spec = spec.to(device)
             label = data[1].to(device)
             output = net(spec[:, 0, :, :].unsqueeze(1))
 
