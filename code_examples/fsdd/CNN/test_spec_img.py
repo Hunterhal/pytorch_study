@@ -2,7 +2,7 @@ from learn_spec_img import *
 import matplotlib.pyplot as plt
 
 
-device = torch.device('cuda')
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 directory = "./saved_models"
 files = list(filter(os.path.isfile, glob.glob(directory + "/*.pth")))
 files.sort(key=lambda x: os.path.getmtime(x))
