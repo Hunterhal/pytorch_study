@@ -19,7 +19,7 @@ fbins = n_fft//2 + 1
 spec_transform = transforms.Spectrogram(n_fft = n_fft, normalized = True)
 for i in range(len(data_path)): 
     fn = data_path[i]
-    digit = int(fn.split("/")[-1].split("_")[0])   # /0_jackson_0.wav
+    digit = int(fn.split("/")[-1].split("_")[0])
     speaker = fn.split("/")[-1].split("_")[1]
     number = fn.split("/")[-1].split("_")[2].split('.')[0]
     wave, sample_rate = torchaudio.load_wav(fn)
