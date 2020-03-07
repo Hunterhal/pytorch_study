@@ -67,10 +67,9 @@ if __name__ == "__main__":
             spec = np.transpose(batch[0], (0, 3, 1, 2)) 
             spec = spec.to(device)
             label = batch[1].to(device)
-            indexes = list(range(0, batch_size)) 
             y_pred = net(spec[:, 0, :, :].unsqueeze(1))   
             optimizer.zero_grad()    
-            loss = criterion(y_pred[indexes], label[indexes])
+            loss = criterion(y_pred, label)
             loss.backward()
             optimizer.step()
             
