@@ -50,7 +50,38 @@ for name, param in model.named_parameters():
         f.write('}\n')
     print("==========================")
 
-    
+im  = Image.open("0_jackson_0.png")
+
+im = np.array(im)
+print("Original Image")
+print("================")
+print(im)
+min_spec = im.min()
+max_spec = im.max()
+
+int_bits = int(np.ceil(np.log2(max(abs(min_spec), abs(max_spec)))))
+frac_bits = 7-int_bits
+quant = np.round(im*(2**frac_bits))
+print("Quantized, then reconstructed back")
+print("================")
+print(quant/(2**frac_bits))
+print("Writing data to header file...")
+
+with open("spec_data_conv.h", 'a') as f:
+        f.write("#define " + "spec_data".upper() + ' {')
+        if(len(quant.shape) > 2): 
+            transposed_wts = np.transpose(quant, (3,0,1,2))
+        else: 
+            transposed_wts = np.transpose(quant)
+        transposed_wts.tofile(f, sep=', ', format="%d")
+        f.write('}\n')
+
+
+
+
+
+
+
 
 
     
