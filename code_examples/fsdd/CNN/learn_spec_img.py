@@ -24,6 +24,7 @@ import cv2
 batch_size = 32
 learning_rate = 1e-3
 max_epoch = 1000
+error_rate = 1e-5
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # Dataset variables
@@ -78,7 +79,7 @@ if __name__ == "__main__":
         if epoch % 2 == 0:
             torch.save(net.state_dict(), "./saved_models/" + netname + "_epoch_%d"%(epoch) + ".pth")
         
-        if run == False:
+        if run == False or ((loss.item() < error_rate) and (loss.item() != 0.0)):
             print("SIGINT asserted exiting training loop")
             break
     print("Saving trained model...")
