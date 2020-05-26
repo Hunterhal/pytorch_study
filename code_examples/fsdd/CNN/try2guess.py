@@ -1,20 +1,15 @@
 from learn_spec_img import *
+import numpy as np
 
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-#directory = "/home/mehmet/Desktop/bitirme/codes/fsdd/CNN/try2guess_test_files"
-directory = "/home/mehmet/Desktop/bitirme/codes/fsdd/CNN/tinypics"
+directory = "/home/mehmet/Desktop/CNN/tinypics"
 files = list(filter(os.path.isfile, glob.glob(directory + "/*.png")))
 i = 0
 for filename in files:
-    net.load_state_dict(torch.load("./saved_models/net_epoch_205.pth"))
-    img = cv2.imread(filename)
-    #print(img.shape)
-    img = np.transpose(img, (2, 0, 1))
-    #print(img.shape)
-    img = torch.from_numpy(img)
-    pred = net(img[0, :, :].unsqueeze(0).unsqueeze(0).to(device))
-    #print(pred.size())
+    net.load_state_dict(torch.load("./33x33_saved_models/net_epoch_199.pth"))
+    img = cv2.imread(filename, 0)  # 0 is put because gray scale images will be loaded
+    img = torch.from_numpy(img)  # transform numpy to tensor
+    pred = net(img.unsqueeze(0).unsqueeze(0).to(device))  # unsqueeze is used to to make our input as (1 x 1 x imgHeight x imgWidth)
     _, predicted = torch.max(pred.data, 1)
     if int(filename.split("/")[-1].split("_")[0]) == int(predicted.item()):
         i += 1
