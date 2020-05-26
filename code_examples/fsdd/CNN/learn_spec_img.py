@@ -1,8 +1,8 @@
 # Basic imports
 import glob
-import numpy as np
 import signal
 import os
+from timeit import default_timer as timer
 
 # PyTorch imports
 import torch
@@ -23,8 +23,8 @@ import cv2
 # Learning parameters
 batch_size = 32
 learning_rate = 1e-3
-max_epoch = 1000
-error_rate = 1e-5
+max_epoch = 200
+#error_rate = 1e-5  # if one wants to use it, just uncomment it
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # Dataset variables
@@ -58,17 +58,19 @@ net = net.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr = learning_rate)
 
+start = timer()  # start the timer
 # Training
 if __name__ == "__main__":
     for epoch in range(max_epoch):
         batchiter = 0
+
         for batch in trainloader:
         
             batchiter += 1
-            spec = np.transpose(batch[0], (0, 3, 1, 2)) 
-            spec = spec.to(device)
+            spec = batch[0].unsqueeze(1).to(device)  # unsqueeze is used to add channel to make our input as (batch_size x 1 x imgHeight x imgWidth)
+            #print(spec.shape)
             label = batch[1].to(device)
-            y_pred = net(spec[:, 0, :, :].unsqueeze(1))   
+            y_pred = net(spec)   
             optimizer.zero_grad()    
             loss = criterion(y_pred, label)
             loss.backward()
@@ -76,11 +78,19 @@ if __name__ == "__main__":
             
             print("TRAIN","Epoch:",epoch+1, "Data-Num:",batchiter, "Loss:",loss.item(), " label: ", label.tolist())
 
-        if epoch % 2 == 0:
-            torch.save(net.state_dict(), "./saved_models/" + netname + "_epoch_%d"%(epoch) + ".pth")
+        if epoch % 20 == 19:
+            torch.save(net.state_dict(), "./33x33_saved_models/" + netname + "_epoch_%d"%(epoch) + ".pth")
         
-        if run == False or ((loss.item() < error_rate) and (loss.item() != 0.0)):
+        #if run == False or ((loss.item() < error_rate) and (loss.item() != 0.0)):    if one wants to use error rate as stopping criteria, just uncomment this line
+        if run == False:                                                              # and delete this line
             print("SIGINT asserted exiting training loop")
             break
+    end = timer()  # end the timer
+    elapsed_time = (end - start)/60  # elapsed time is calculated
+    elapsedTimeFile = open('elapsed_time.txt', 'w')  # open a text file in write mode
+    elapsedTimeFile.write('{:.3f}'.format(float(elapsed_time)))  # elapsed time is written on a text file
+    elapsedTimeFile.close()  # close the text file
+
+    print('Elapsed time for training: {:.3f} minutes!'.format(float(elapsed_time)))
     print("Saving trained model...")
-    torch.save(net.state_dict(), "./saved_models/" + netname + "_epoch_%d"%(epoch) + ".pth")
+    torch.save(net.state_dict(), "./33x33_saved_models/" + netname + "_epoch_%d"%(epoch) + ".pth")
