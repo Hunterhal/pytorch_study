@@ -13,9 +13,8 @@ class MyCustomFSDD(Dataset):
             self.data_path = glob.glob(data_path + "/norm-test-image-dataset/*.png")
 
     def __getitem__(self, index):
-
         fn = self.data_path[index]
-        img = cv2.imread(fn) 
+        img = cv2.imread(fn, 0)  # 0 is put because gray scale images will be loaded
         digit = int(fn.split("/")[-1].split("_")[0])
         speaker = fn.split("/")[-1].split("_")[1]
 
