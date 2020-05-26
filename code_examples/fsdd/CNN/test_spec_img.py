@@ -25,9 +25,9 @@ for filename in files:
     acc_list.append(100 * (correct/total))
     epoch_list.append(int(filename.split("_")[-1].split(".")[0]))
 
-elapsedTimeFile = open('elapsed_time.txt')
-elapsedTime = float(elapsedTimeFile.read())
-elapsedTimeFile.close()
+elapsedTimeFile = open('elapsed_time.txt')  # open the text file
+elapsedTime = float(elapsedTimeFile.read()) # elapsed time is taken from the text file
+elapsedTimeFile.close()  # close the text file
 
 fig = plt.figure()
 plt.plot(epoch_list, acc_list)
